@@ -95,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-
         InitDevice();
         startFingerprintSensor();
     }
