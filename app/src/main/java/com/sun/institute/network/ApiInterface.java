@@ -45,8 +45,8 @@ public interface ApiInterface {
 
 
     @FormUrlEncoded
-    @POST("app.php")
-    Call<StatusResponse> saveFinger(@Query("facultyInsert") String facultyInsert,
+    @POST("app.php?act=facultyInsert")
+    Call<StatusResponse> saveFinger(
                                        @Field("fname") String fname,
                                        @Field("last_name") String last_name,
                                        @Field("email") String email,

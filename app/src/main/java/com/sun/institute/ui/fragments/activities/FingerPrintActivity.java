@@ -734,7 +734,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
 
     private void saveFinger(String tumb){
-        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).saveFinger("facultyInsert", "suresh", "kumar", "suresh@gmail.com", "8985018103", "1",tumb);
+        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).saveFinger( "suresh", "kumar", "suresh@gmail.com", "8985018103", "1",tumb);
         call.enqueue(new Callback<StatusResponse>() {
             @SuppressLint("SetTextI18n")
             @Override
