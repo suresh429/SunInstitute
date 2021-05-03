@@ -44,14 +44,15 @@ public interface ApiInterface {
                                       );
 
 
-    @GET("app.php")
+    @FormUrlEncoded
+    @POST("app.php")
     Call<StatusResponse> saveFinger(@Query("facultyInsert") String facultyInsert,
-                                       @Query("fname") String fname,
-                                       @Query("last_name") String last_name,
-                                       @Query("email") String email,
-                                       @Query("mobile") String mobile,
-                                       @Query("type") String type,
-                                       @Query("thumb") String thumb
+                                       @Field("fname") String fname,
+                                       @Field("last_name") String last_name,
+                                       @Field("email") String email,
+                                       @Field("mobile") String mobile,
+                                       @Field("type") String type,
+                                       @Field("thumb") String thumb
     );
 
 
