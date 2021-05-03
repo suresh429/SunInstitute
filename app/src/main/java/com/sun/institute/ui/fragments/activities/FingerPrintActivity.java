@@ -16,6 +16,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,16 @@ import com.acpl.access_computech_fm220_sdk.acpl_FM220_SDK;
 import com.acpl.access_computech_fm220_sdk.fm220_Capture_Result;
 import com.acpl.access_computech_fm220_sdk.fm220_Init_Result;
 import com.sun.institute.R;
+import com.sun.institute.network.ApiInterface;
+import com.sun.institute.network.NoConnectivityException;
+import com.sun.institute.network.RetrofitService;
+import com.sun.institute.response.StatusResponse;
+
+import java.io.ByteArrayOutputStream;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FingerPrintActivity extends AppCompatActivity implements FM220_Scanner_Interface {
     private static final String TAG = "MainActivity";
@@ -674,6 +685,8 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
                     Log.d(TAG, "run: "+result.getFingermatchScore());
 
+                    saveFinger(BitMapToString(result.getScanImage()));
+
                     if (result.isEnroll()) {  // if isEnroll return true then result.getISO_Template() return enrolled finger data .
                         textMessage.setText("Finger Enroll Success");
                     } else {
@@ -719,6 +732,51 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
         });
     }
 
+
+    private void saveFinger(String tumb){
+        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).saveFinger("facultyInsert", "suresh", "kumar", "suresh@gmail.com", "8985018103", "1",tumb);
+        call.enqueue(new Callback<StatusResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<StatusResponse> call, @NonNull Response<StatusResponse> response) {
+
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    StatusResponse statusResponse = response.body();
+
+                    if (statusResponse.getMsg().equalsIgnoreCase("success")) {
+                        Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
+                    }
+
+                } else if (response.errorBody() != null) {
+                    Toast.makeText(FingerPrintActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<StatusResponse> call, @NonNull Throwable t) {
+                if (t instanceof NoConnectivityException) {
+                    // show No Connectivity message to user or do whatever you want.
+                    Toast.makeText(FingerPrintActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Whenever you want to show toast use setValue.
+
+                }
+
+
+            }
+        });
+    }
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

@@ -44,5 +44,15 @@ public interface ApiInterface {
                                       );
 
 
+    @GET("app.php?act=facultyInsert")
+    Call<StatusResponse> saveFinger(@Query("facultyInsert") String facultyInsert,
+                                       @Query("fname") String fname,
+                                       @Query("last_name") String last_name,
+                                       @Query("email") String email,
+                                       @Query("mobile") String mobile,
+                                       @Query("type") String type,
+                                       @Query("thumb") String thumb
+    );
+
 
 }
