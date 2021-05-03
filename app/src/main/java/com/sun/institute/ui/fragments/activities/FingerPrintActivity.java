@@ -745,6 +745,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
                     StatusResponse statusResponse = response.body();
 
                     Log.d(TAG, "onResponse: "+statusResponse.getMsg());
+
                     if (statusResponse.getMsg().equalsIgnoreCase("success")) {
                         Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
                     } else {
