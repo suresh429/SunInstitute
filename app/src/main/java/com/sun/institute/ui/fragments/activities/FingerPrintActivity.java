@@ -33,6 +33,7 @@ import com.sun.institute.R;
 import com.sun.institute.network.ApiInterface;
 import com.sun.institute.network.NoConnectivityException;
 import com.sun.institute.network.RetrofitService;
+import com.sun.institute.response.LoginResponse;
 import com.sun.institute.response.StatusResponse;
 
 import java.io.ByteArrayOutputStream;
@@ -685,7 +686,8 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
                     Log.d(TAG, "run: "+result.getFingermatchScore());
 
-                    saveFinger(BitMapToString(result.getScanImage()));
+                   // saveFinger(BitMapToString(result.getScanImage()));
+                    loginFinger(BitMapToString(result.getScanImage()));
 
                     if (result.isEnroll()) {  // if isEnroll return true then result.getISO_Template() return enrolled finger data .
                         textMessage.setText("Finger Enroll Success");
@@ -760,6 +762,45 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
             @Override
             public void onFailure(@NonNull Call<StatusResponse> call, @NonNull Throwable t) {
+                if (t instanceof NoConnectivityException) {
+                    // show No Connectivity message to user or do whatever you want.
+                    Toast.makeText(FingerPrintActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Whenever you want to show toast use setValue.
+
+                }
+
+
+            }
+        });
+    }
+
+    private void loginFinger(String tumb){
+        Call<LoginResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).loginFinger( tumb);
+        call.enqueue(new Callback<LoginResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    LoginResponse statusResponse = response.body();
+
+                    Log.d(TAG, "onResponse: "+statusResponse.getMsg());
+
+                    if (statusResponse.getMsg().equalsIgnoreCase("success")) {
+                        Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
+                    }
+
+                } else if (response.errorBody() != null) {
+                    Toast.makeText(FingerPrintActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     // show No Connectivity message to user or do whatever you want.
                     Toast.makeText(FingerPrintActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();

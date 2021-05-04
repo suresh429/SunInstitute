@@ -1,6 +1,7 @@
 package com.sun.institute.network;
 
 import com.sun.institute.response.DepartmentResponse;
+import com.sun.institute.response.LoginResponse;
 import com.sun.institute.response.SectionResponse;
 import com.sun.institute.response.StatusResponse;
 import com.sun.institute.response.StudentsResponse;
@@ -55,5 +56,12 @@ public interface ApiInterface {
                                        @Field("thumb") String thumb
     );
 
+
+
+    @FormUrlEncoded
+    @POST("app.php?act=facultLogin")
+    Call<LoginResponse> loginFinger(
+            @Field("thumb") String thumb
+    );
 
 }
