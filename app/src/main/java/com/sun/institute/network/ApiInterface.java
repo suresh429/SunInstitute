@@ -7,6 +7,8 @@ import com.sun.institute.response.StatusResponse;
 import com.sun.institute.response.StudentsResponse;
 import com.sun.institute.response.SubjectResponse;
 
+import java.util.Map;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -18,6 +20,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -49,11 +52,11 @@ public interface ApiInterface {
     @Multipart
     @POST("app.php?act=facultyInsert")
     Call<StatusResponse> saveFinger(
-                                       @Field("fname") String fname,
-                                       @Field("last_name") String last_name,
-                                       @Field("email") String email,
-                                       @Field("mobile") String mobile,
-                                       @Field("type") String type,
+                                       @Part("fname") RequestBody fname,
+                                       @Part("last_name") RequestBody last_name,
+                                       @Part("email") RequestBody email,
+                                       @Part("mobile") RequestBody mobile,
+                                       @Part("type") RequestBody type,
                                        @Part MultipartBody.Part imag
                                       // @Field("thumb") String thumb
     );

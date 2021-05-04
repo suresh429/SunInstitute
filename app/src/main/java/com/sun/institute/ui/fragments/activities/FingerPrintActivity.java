@@ -751,7 +751,13 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
         RequestBody reqFile = RequestBody.create( tumb,MediaType.parse("image/*"));
         MultipartBody.Part body = MultipartBody.Part.createFormData("thumb", tumb.getName(), reqFile);
 
-        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).saveFinger( "suresh", "kumar", "suresh@gmail.com", "8985018103", "1",body);
+        RequestBody fName = RequestBody.create( "suresh",MediaType.parse("multipart/form-data"));
+        RequestBody lName = RequestBody.create( "kumar",MediaType.parse("multipart/form-data"));
+        RequestBody email = RequestBody.create( "suresh@gmail.com",MediaType.parse("multipart/form-data"));
+        RequestBody mobile = RequestBody.create( "8985018103",MediaType.parse("multipart/form-data"));
+        RequestBody type = RequestBody.create( "1",MediaType.parse("multipart/form-data"));
+
+        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).saveFinger( fName, lName, email, mobile, type,body);
         call.enqueue(new Callback<StatusResponse>() {
             @SuppressLint("SetTextI18n")
             @Override
