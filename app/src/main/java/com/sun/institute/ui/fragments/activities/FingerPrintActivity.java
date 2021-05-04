@@ -54,7 +54,9 @@ import com.sun.institute.response.StatusResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -827,14 +829,25 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
                     FacultyList statusResponse = response.body();
 
                     Log.d(TAG, "onResponse: "+statusResponse.getMsg());
-                    File mSaveBit = new File(statusResponse.getInfo()); // Your image file
+                   /* File mSaveBit = new File(statusResponse.getInfo()); // Your image file
                     String filePath = mSaveBit.getPath();
-                    Bitmap bitmap2 = BitmapFactory.decodeFile(filePath);
+                    Bitmap bitmap2 = BitmapFactory.decodeFile(filePath);*/
+
+                    try {
+                        URL url = new URL(statusResponse.getInfo());
+                        Bitmap bitmap2 = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+                        bitmapEquals(bitmap1,bitmap2);
+
+                        Log.d(TAG, "onResponseBITMAP: "+bitmapEquals(bitmap1,bitmap2));
+
+                    } catch(IOException e) {
+                        System.out.println(e);
+                    }
+
                     //mImageView.setImageBitmap(bitmap);
 
-                    bitmapEquals(bitmap1,bitmap2);
 
-                    Log.d(TAG, "onResponseBITMAP: "+bitmapEquals(bitmap1,bitmap2));
 
 
                     /*if (statusResponse.getMsg().equalsIgnoreCase("success")) {
