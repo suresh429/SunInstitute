@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
@@ -46,6 +47,7 @@ import com.sun.institute.R;
 import com.sun.institute.network.ApiInterface;
 import com.sun.institute.network.NoConnectivityException;
 import com.sun.institute.network.RetrofitService;
+import com.sun.institute.response.FacultyList;
 import com.sun.institute.response.LoginResponse;
 import com.sun.institute.response.StatusResponse;
 
@@ -53,6 +55,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -708,8 +712,9 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
                     Log.d(TAG, "run: "+result.getFingermatchScore());
 
-                    saveFinger(bitmapToFile(FingerPrintActivity.this,result.getScanImage(),"suninstitute.png"));
+                  //  saveFinger(bitmapToFile(FingerPrintActivity.this,result.getScanImage(),"suninstitute.png"));
 
+                    loginFinger(result.getScanImage());
 
                     if (result.isEnroll()) {  // if isEnroll return true then result.getISO_Template() return enrolled finger data .
                         textMessage.setText("Finger Enroll Success");
@@ -746,7 +751,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
                 if (FM220SDK.FM220Initialized()) EnableCapture();
                 if (result.getResult()) {
                     //saveFinger(BitMapToString(result.getScanImage()));
-                    loginFinger(BitMapToString(result.getScanImage()));
+                    //loginFinger(BitMapToString(result.getScanImage()));
                     imageView.setImageBitmap(result.getScanImage());
                     Log.d(TAG, "run: "+result.getFingermatchScore());
                     textMessage.setText("Finger matched\n" + "Success NFIQ:" + result.getNFIQ()+"Score:- "+result.getFingermatchScore());
@@ -810,24 +815,33 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
         });
     }
 
-    private void loginFinger(String tumb){
-        Call<LoginResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).loginFinger( tumb);
-        call.enqueue(new Callback<LoginResponse>() {
+    private void loginFinger(Bitmap bitmap1){
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).allLogin( );
+        call.enqueue(new Callback<FacultyList>() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+            public void onResponse(@NonNull Call<FacultyList> call, @NonNull Response<FacultyList> response) {
 
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    LoginResponse statusResponse = response.body();
+                    FacultyList statusResponse = response.body();
 
                     Log.d(TAG, "onResponse: "+statusResponse.getMsg());
+                    File mSaveBit = new File(statusResponse.getInfo()); // Your image file
+                    String filePath = mSaveBit.getPath();
+                    Bitmap bitmap2 = BitmapFactory.decodeFile(filePath);
+                    //mImageView.setImageBitmap(bitmap);
 
-                    if (statusResponse.getMsg().equalsIgnoreCase("success")) {
+                    bitmapEquals(bitmap1,bitmap2);
+
+                    Log.d(TAG, "onResponseBITMAP: "+bitmapEquals(bitmap1,bitmap2));
+
+
+                    /*if (statusResponse.getMsg().equalsIgnoreCase("success")) {
                         Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getInfo().getFname(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
 
                 } else if (response.errorBody() != null) {
                     Toast.makeText(FingerPrintActivity.this, response.message(), Toast.LENGTH_SHORT).show();
@@ -836,7 +850,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
             }
 
             @Override
-            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<FacultyList> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     // show No Connectivity message to user or do whatever you want.
                     Toast.makeText(FingerPrintActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
@@ -847,6 +861,16 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
             }
         });
+    }
+
+    public boolean bitmapEquals(Bitmap bitmap1, Bitmap bitmap2) {
+        ByteBuffer buffer1 = ByteBuffer.allocate(bitmap1.getHeight() * bitmap1.getRowBytes());
+        bitmap1.copyPixelsToBuffer(buffer1);
+
+        ByteBuffer buffer2 = ByteBuffer.allocate(bitmap2.getHeight() * bitmap2.getRowBytes());
+        bitmap2.copyPixelsToBuffer(buffer2);
+
+        return Arrays.equals(buffer1.array(), buffer2.array());
     }
 
     public String BitMapToString(Bitmap bitmap){
