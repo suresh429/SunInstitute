@@ -9,6 +9,7 @@ import com.sun.institute.response.SubjectResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -45,7 +46,7 @@ public interface ApiInterface {
                                       );
 
 
-    @FormUrlEncoded
+    @Multipart
     @POST("app.php?act=facultyInsert")
     Call<StatusResponse> saveFinger(
                                        @Field("fname") String fname,
@@ -53,7 +54,8 @@ public interface ApiInterface {
                                        @Field("email") String email,
                                        @Field("mobile") String mobile,
                                        @Field("type") String type,
-                                       @Field("thumb") String thumb
+                                       @Part MultipartBody.Part imag
+                                      // @Field("thumb") String thumb
     );
 
 

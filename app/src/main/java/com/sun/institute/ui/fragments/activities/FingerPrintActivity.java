@@ -16,6 +16,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -37,7 +38,13 @@ import com.sun.institute.response.LoginResponse;
 import com.sun.institute.response.StatusResponse;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -686,7 +693,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
                     Log.d(TAG, "run: "+result.getFingermatchScore());
 
-                   // saveFinger(BitMapToString(result.getScanImage()));
+                    saveFinger(bitmapToFile(FingerPrintActivity.this,result.getScanImage(),"suninstitute.png"));
 
 
                     if (result.isEnroll()) {  // if isEnroll return true then result.getISO_Template() return enrolled finger data .
@@ -739,8 +746,12 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
     }
 
 
-    private void saveFinger(String tumb){
-        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).saveFinger( "suresh", "kumar", "suresh@gmail.com", "8985018103", "1",tumb);
+    private void saveFinger(File tumb){
+
+        RequestBody reqFile = RequestBody.create( tumb,MediaType.parse("image/*"));
+        MultipartBody.Part body = MultipartBody.Part.createFormData("thumb", tumb.getName(), reqFile);
+
+        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).saveFinger( "suresh", "kumar", "suresh@gmail.com", "8985018103", "1",body);
         call.enqueue(new Callback<StatusResponse>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -823,6 +834,30 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
         byte [] b=baos.toByteArray();
         String temp= Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
+    }
+
+    public static File bitmapToFile(Context context,Bitmap bitmap, String fileNameToSave) { // File name like "image.png"
+        //create a file to write bitmap data
+        File file = null;
+        try {
+            file = new File(Environment.getExternalStorageDirectory() + File.separator + fileNameToSave);
+            file.createNewFile();
+
+//Convert bitmap to byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0 , bos); // YOU can also save it in JPEG
+            byte[] bitmapdata = bos.toByteArray();
+
+//write the bytes in file
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+            return file;
+        }catch (Exception e){
+            e.printStackTrace();
+            return file; // it will return null
+        }
     }
 
     @Override
