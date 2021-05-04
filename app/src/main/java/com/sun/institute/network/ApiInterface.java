@@ -70,8 +70,8 @@ public interface ApiInterface {
             @Field("thumb") String thumb
     );
 
-    @FormUrlEncoded
-    @POST("app.php?act=facultList")
+
+    @GET("app.php?act=facultList")
     Call<FacultyList> allLogin(
     );
 
