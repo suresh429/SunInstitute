@@ -686,7 +686,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
                     Log.d(TAG, "run: "+result.getFingermatchScore());
 
-                    saveFinger(BitMapToString(result.getScanImage()));
+                   // saveFinger(BitMapToString(result.getScanImage()));
 
 
                     if (result.isEnroll()) {  // if isEnroll return true then result.getISO_Template() return enrolled finger data .
@@ -721,7 +721,8 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
             public void run() {
                 if (FM220SDK.FM220Initialized()) EnableCapture();
                 if (result.getResult()) {
-                    loginFinger(BitMapToString(result.getScanImage()));
+                    saveFinger(BitMapToString(result.getScanImage()));
+                   // loginFinger(BitMapToString(result.getScanImage()));
                     imageView.setImageBitmap(result.getScanImage());
                     Log.d(TAG, "run: "+result.getFingermatchScore());
                     textMessage.setText("Finger matched\n" + "Success NFIQ:" + result.getNFIQ()+"Score:- "+result.getFingermatchScore());
