@@ -696,8 +696,10 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
                     }
                     if (t1 == null) {
                         t1 = result.getISO_Template();
+                        Log.d(TAG, "run: "+t1);
                     } else {
                         t2 = result.getISO_Template();
+                        Log.d(TAG, "run: "+t2);
                     }
 //                    Bitmap mb = result.getScanImage();
 //                    System.out.print((mb));
