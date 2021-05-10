@@ -50,7 +50,7 @@ public interface ApiInterface {
                                       );
 
 
-    @Multipart
+    @FormUrlEncoded
     @POST("app.php?act=facultyInsert")
     Call<StatusResponse> registerFinger(
                                        @Field("fname") String fname,
