@@ -52,14 +52,13 @@ public interface ApiInterface {
 
     @Multipart
     @POST("app.php?act=facultyInsert")
-    Call<StatusResponse> saveFinger(
-                                       @Part("fname") RequestBody fname,
-                                       @Part("last_name") RequestBody last_name,
-                                       @Part("email") RequestBody email,
-                                       @Part("mobile") RequestBody mobile,
-                                       @Part("type") RequestBody type,
-                                       @Part MultipartBody.Part imag
-                                      // @Field("thumb") String thumb
+    Call<StatusResponse> registerFinger(
+                                       @Field("fname") String fname,
+                                       @Field("last_name") String last_name,
+                                       @Field("email") String email,
+                                       @Field("mobile") String mobile,
+                                       @Field("type") String type,
+                                       @Field("thumb") String thumb
     );
 
 
@@ -71,7 +70,7 @@ public interface ApiInterface {
     );
 
 
-    @GET("app.php?act=facultList")
+    @GET("app.php?act=ThumbData")
     Call<FacultyList> allLogin(
     );
 

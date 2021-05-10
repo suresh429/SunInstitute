@@ -48,27 +48,22 @@ import com.sun.institute.network.ApiInterface;
 import com.sun.institute.network.NoConnectivityException;
 import com.sun.institute.network.RetrofitService;
 import com.sun.institute.response.FacultyList;
-import com.sun.institute.response.LoginResponse;
 import com.sun.institute.response.StatusResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FingerPrintActivity extends AppCompatActivity implements FM220_Scanner_Interface {
+public class FingerLoginActivity extends AppCompatActivity implements FM220_Scanner_Interface {
     private static final int REQUEST = 112;
     private static final String TAG = "MainActivity";
     private acpl_FM220_SDK FM220SDK;
@@ -235,6 +230,10 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
         Enroll_finger = findViewById(R.id.button5);
         abort_button = findViewById(R.id.button6);
         imageView = findViewById(R.id.imageView);
+
+        Enroll_finger.setVisibility(View.GONE);
+
+
 //      btn_Release = findViewById(R.id.releasebutton);
 //      btn_Clam = findViewById(R.id.clambutton);
 //      btn_RDCapture = findViewById(R.id.rdcap);
@@ -414,6 +413,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
                         // SetNFIQ == 2
                         DisableCapture();  // alwasy set 2 here..
                         FM220SDK.MatchFM220(2, true, true, t1);
+
                     }
 
                    /* if (t1 != null && t2 != null) {
@@ -687,7 +687,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
     @Override
     public void ScannerProgressFM220(final boolean DisplayImage, final Bitmap ScanImage, final boolean DisplayText, final String statusMessage) {
-        FingerPrintActivity.this.runOnUiThread(new Runnable() {
+        FingerLoginActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (DisplayText) {
@@ -705,7 +705,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
     @SuppressLint("SetTextI18n")
     @Override
     public void ScanCompleteFM220(final fm220_Capture_Result result) {
-        FingerPrintActivity.this.runOnUiThread(new Runnable() {
+        FingerLoginActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (FM220SDK.FM220Initialized()) EnableCapture();
@@ -714,9 +714,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
                     Log.d(TAG, "run: "+result.getFingermatchScore());
 
-                  //  saveFinger(bitmapToFile(FingerPrintActivity.this,result.getScanImage(),"suninstitute.png"));
 
-                    loginFinger(result.getScanImage());
 
                     if (result.isEnroll()) {  // if isEnroll return true then result.getISO_Template() return enrolled finger data .
                         textMessage.setText("Finger Enroll Success");
@@ -726,9 +724,13 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
                     if (t1 == null) {
                         t1 = result.getISO_Template();
                         Log.d(TAG, "run: "+t1);
+
                     } else {
                         t2 = result.getISO_Template();
                         Log.d(TAG, "run: "+t2);
+                        String stringT2 = Base64.encodeToString(t2,Base64.NO_WRAP);
+
+                        loginFinger(stringT2);
                     }
 //                    Bitmap mb = result.getScanImage();
 //                    System.out.print((mb));
@@ -747,7 +749,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
     @SuppressLint("SetTextI18n")
     @Override
     public void ScanMatchFM220(final fm220_Capture_Result result) {
-        FingerPrintActivity.this.runOnUiThread(new Runnable() {
+        FingerLoginActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (FM220SDK.FM220Initialized()) EnableCapture();
@@ -768,57 +770,8 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
     }
 
 
-    private void saveFinger(File tumb){
-
-        RequestBody reqFile = RequestBody.create( tumb,MediaType.parse("image/*"));
-        MultipartBody.Part body = MultipartBody.Part.createFormData("thumb", tumb.getName(), reqFile);
-
-        RequestBody fName = RequestBody.create( "suresh",MediaType.parse("multipart/form-data"));
-        RequestBody lName = RequestBody.create( "kumar",MediaType.parse("multipart/form-data"));
-        RequestBody email = RequestBody.create( "suresh@gmail.com",MediaType.parse("multipart/form-data"));
-        RequestBody mobile = RequestBody.create( "8985018103",MediaType.parse("multipart/form-data"));
-        RequestBody type = RequestBody.create( "1",MediaType.parse("multipart/form-data"));
-
-        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).saveFinger( fName, lName, email, mobile, type,body);
-        call.enqueue(new Callback<StatusResponse>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(@NonNull Call<StatusResponse> call, @NonNull Response<StatusResponse> response) {
-
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    StatusResponse statusResponse = response.body();
-
-                    Log.d(TAG, "onResponse: "+statusResponse.getMsg());
-
-                    if (statusResponse.getMsg().equalsIgnoreCase("success")) {
-                        Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FingerPrintActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-                } else if (response.errorBody() != null) {
-                    Toast.makeText(FingerPrintActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<StatusResponse> call, @NonNull Throwable t) {
-                if (t instanceof NoConnectivityException) {
-                    // show No Connectivity message to user or do whatever you want.
-                    Toast.makeText(FingerPrintActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    // Whenever you want to show toast use setValue.
-
-                }
-
-
-            }
-        });
-    }
-
-    private void loginFinger(Bitmap bitmap1){
-        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class,FingerPrintActivity.this).allLogin( );
+    private void loginFinger(String stringT2){
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).allLogin( );
         call.enqueue(new Callback<FacultyList>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -829,25 +782,19 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
                     FacultyList statusResponse = response.body();
 
                     Log.d(TAG, "onResponse: "+statusResponse.getMsg());
+
+                    FunctionBase64(statusResponse.getInfo().getThumb(), stringT2);
+                    Log.d(TAG, "onResponse: "+FunctionBase64(statusResponse.getInfo().getThumb(), stringT2));
+
+
+
+
                    /* File mSaveBit = new File(statusResponse.getInfo()); // Your image file
                     String filePath = mSaveBit.getPath();
                     Bitmap bitmap2 = BitmapFactory.decodeFile(filePath);*/
 
-                    try {
-                        URL url = new URL(statusResponse.getInfo());
-                        Bitmap bitmap2 = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
-                        bitmapEquals(bitmap1,bitmap2);
-
-                        Log.d(TAG, "onResponseBITMAP: "+bitmapEquals(bitmap1,bitmap2));
-
-                    } catch(IOException e) {
-                        System.out.println(e);
-                    }
 
                     //mImageView.setImageBitmap(bitmap);
-
-
 
 
                     /*if (statusResponse.getMsg().equalsIgnoreCase("success")) {
@@ -857,7 +804,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
                     }*/
 
                 } else if (response.errorBody() != null) {
-                    Toast.makeText(FingerPrintActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FingerLoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -866,7 +813,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
             public void onFailure(@NonNull Call<FacultyList> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     // show No Connectivity message to user or do whatever you want.
-                    Toast.makeText(FingerPrintActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FingerLoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                     // Whenever you want to show toast use setValue.
 
                 }
@@ -964,7 +911,7 @@ public class FingerPrintActivity extends AppCompatActivity implements FM220_Scan
 
 
     private void showSettingsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(FingerPrintActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(FingerLoginActivity.this);
         builder.setTitle("Need Permissions");
         builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
         builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {

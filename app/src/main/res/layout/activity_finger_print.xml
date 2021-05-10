@@ -31,7 +31,8 @@
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
         android:enabled="true"
-        android:text="Capture (NP)" />
+        android:text="Capture (NP)"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/button2"
@@ -51,7 +52,8 @@
         android:layout_alignStart="@+id/button2"
         android:layout_below="@+id/button2"
         android:enabled="true"
-        android:text="CAPTURE (BG)" />
+        android:text="CAPTURE (BG)"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/button4"

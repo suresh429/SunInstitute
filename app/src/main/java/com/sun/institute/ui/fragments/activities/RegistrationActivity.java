@@ -3,8 +3,10 @@ package com.sun.institute.ui.fragments.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.sun.institute.databinding.ActivityRegistrationBinding;
 
@@ -20,6 +22,14 @@ public class RegistrationActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Registration");
+
+        binding.btnFinger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegistrationActivity.this,FingerEnrollActivity.class);
+                startActivityForResult(intent,100);
+            }
+        });
     }
 
 
