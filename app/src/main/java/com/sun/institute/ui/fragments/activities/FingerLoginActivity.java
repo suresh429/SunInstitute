@@ -25,6 +25,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -783,8 +784,17 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
                     Log.d(TAG, "onResponse: "+statusResponse.getMsg());
 
-                    FunctionBase64(statusResponse.getInfo().getThumb(), stringT2);
-                    Log.d(TAG, "onResponse: "+FunctionBase64(statusResponse.getInfo().getThumb(), stringT2));
+
+                    boolean matchval = FunctionBase64(statusResponse.getInfo().getThumb(), stringT2);
+                    if (matchval) {
+                        Toast toast = Toast.makeText(getBaseContext(), "Finger matched", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    } else {
+                        Toast toast = Toast.makeText(getBaseContext(), "Finger not matched", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }
 
 
 
