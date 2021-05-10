@@ -65,8 +65,8 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("app.php?act=facultLogin")
-    Call<LoginResponse> loginFinger(
-            @Field("thumb") String thumb
+    Call<FacultyList> loginFinger(
+            @Field("mobile") String thumb
     );
 
 

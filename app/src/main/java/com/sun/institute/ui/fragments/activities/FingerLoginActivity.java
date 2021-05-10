@@ -771,7 +771,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
 
     private void loginFinger(String stringT2){
-        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).allLogin( );
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger("8465945100" );
         call.enqueue(new Callback<FacultyList>() {
             @SuppressLint("SetTextI18n")
             @Override
