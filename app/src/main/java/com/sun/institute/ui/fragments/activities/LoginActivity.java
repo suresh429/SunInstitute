@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginFinger(String stringT2){
 
-        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, LoginActivity.this).loginFinger( "8465945100",currentTime,newTime);
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, LoginActivity.this).loginFinger( "8465945100");
         call.enqueue(new Callback<FacultyList>() {
             @SuppressLint("SetTextI18n")
             @Override

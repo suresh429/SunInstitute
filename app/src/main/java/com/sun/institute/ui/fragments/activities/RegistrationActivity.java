@@ -108,6 +108,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     Log.d(TAG, "onResponse: " + statusResponse.getMsg());
 
                     if (statusResponse.getMsg().equalsIgnoreCase("success")) {
+                        Intent intent = new Intent(RegistrationActivity.this,LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                         Toast.makeText(RegistrationActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(RegistrationActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();

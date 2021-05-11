@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +81,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
     private Button Enroll_finger, abort_button;
     private TextView textMessage;
     private ImageView imageView;
+    private ProgressBar progress_circular;
     private String currentTime,newTime;
     UserSessionManager userSessionManager ;
     //  private Button btn_Release, btn_Clam, btn_RDCapture;
@@ -260,6 +262,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
         Enroll_finger = findViewById(R.id.button5);
         abort_button = findViewById(R.id.button6);
         imageView = findViewById(R.id.imageView);
+        progress_circular = findViewById(R.id.progress_circular);
 
         Enroll_finger.setVisibility(View.GONE);
         Capture_Match.setVisibility(View.GONE);
@@ -809,7 +812,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
     private void loginFinger(String stringT2) {
 
-        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger(mobileNo,currentTime,newTime);
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger(mobileNo);
         call.enqueue(new Callback<FacultyList>() {
             @SuppressLint("SetTextI18n")
             @Override
