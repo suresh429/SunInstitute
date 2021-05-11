@@ -2,11 +2,13 @@ package com.sun.institute.network;
 
 import com.sun.institute.response.DepartmentResponse;
 import com.sun.institute.response.FacultyList;
+import com.sun.institute.response.HomeResponse;
 import com.sun.institute.response.LoginResponse;
 import com.sun.institute.response.SectionResponse;
 import com.sun.institute.response.StatusResponse;
 import com.sun.institute.response.StudentsResponse;
 import com.sun.institute.response.SubjectResponse;
+import com.sun.institute.response.TimeTableResponse;
 
 import java.util.Map;
 
@@ -64,10 +66,47 @@ public interface ApiInterface {
 
 
 
-    @POST("app.php?act=facultLogin&mobile=8465945100")
+   /* @POST("app.php?act=facultLogin&mobile=8465945100")
     Call<FacultyList> loginFinger(
            // @Query("mobile") String thumb
+    );*/
+
+    @POST("app.php?act=facultLogin")
+    Call<FacultyList> loginFinger(
+             @Query("mobile") String thumb,
+             @Query("carrent_time") String carrent_time,
+             @Query("carrent_time1") String carrent_time1
+
     );
+
+    @POST("app.php?act=facultAtt")
+    Call<ResponseBody> facultyAtt(
+            @Query("id") String id
+
+    );
+
+    @Multipart
+    @POST("app.php?act=cpldata")
+    Call<ResponseBody> cplData(
+            @Part("timetable_id") RequestBody timetable_id,
+            @Part("note") RequestBody note,
+            @Part MultipartBody.Part file
+
+    );
+
+
+    @GET("app.php?act=Timetable")
+    Call<TimeTableResponse> timeTable(
+            @Query("id") String id
+
+    );
+
+    @GET("app.php?act=Dashboard")
+    Call<HomeResponse> dashBoard(
+            @Query("timetable_id") String timetable_id
+
+    );
+
 
 
     @GET("app.php?act=ThumbData")

@@ -41,9 +41,10 @@
                     android:layout_weight="1"/>
 
                 <TextView
+                    android:id="@+id/txtClass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/b_sc_ag"
+                    android:text=""
                     android:textSize="18sp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"/>
@@ -63,9 +64,9 @@
                     android:layout_weight="1"/>
 
                 <TextView
+                    android:id="@+id/txtSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/a"
                     android:textSize="18sp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"/>
@@ -85,9 +86,9 @@
                     android:layout_weight="1"/>
 
                 <TextView
+                    android:id="@+id/txtSemister"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/a"
                     android:textSize="18sp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"/>
@@ -107,9 +108,9 @@
                     android:layout_weight="1"/>
 
                 <TextView
+                    android:id="@+id/txtFacultyName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ashok"
                     android:textSize="18sp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"/>
@@ -129,9 +130,9 @@
                     android:layout_weight="1"/>
 
                 <TextView
+                    android:id="@+id/txtSubject"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Chemistry"
                     android:textSize="18sp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"/>
@@ -151,9 +152,9 @@
                     android:layout_weight="1"/>
 
                 <TextView
+                    android:id="@+id/txtFacultyTopic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="topic"
                     android:textSize="18sp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"/>
@@ -206,9 +207,25 @@
                     android:maxLines="8"
                     android:gravity="start"
                     android:inputType="textMultiLine"
-                    android:hint="@string/note" />
+                    android:hint="@string/note"
+                    android:id="@+id/etNote"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:id="@+id/btnSubmit"
+                android:text="@string/submit"
+                android:layout_weight="1"
+                android:layout_gravity="end"
+                android:layout_margin="10dp"/>
         </LinearLayout>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:id="@+id/progress_circular"/>
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>

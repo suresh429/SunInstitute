@@ -233,6 +233,9 @@ public class FingerEnrollActivity extends AppCompatActivity implements FM220_Sca
 
         Capture_Match.setVisibility(View.GONE);
         Capture_PreView.setVisibility(View.GONE);
+
+
+
 //      btn_Release = findViewById(R.id.releasebutton);
 //      btn_Clam = findViewById(R.id.clambutton);
 //      btn_RDCapture = findViewById(R.id.rdcap);
@@ -726,7 +729,14 @@ public class FingerEnrollActivity extends AppCompatActivity implements FM220_Sca
                         Log.d(TAG, "run: "+t1);
 
                         String data = Base64.encodeToString(t1,Base64.NO_WRAP);
-                        registerFinger(data);
+
+                        Intent intent = getIntent();
+                        intent.putExtra("THUMB", data);
+                        setResult(RESULT_OK, intent);
+                        finish();
+
+
+                        //registerFinger(data);
 
 
                     } else {
@@ -771,55 +781,7 @@ public class FingerEnrollActivity extends AppCompatActivity implements FM220_Sca
     }
 
 
-    private void registerFinger(String tumb){
 
-       /* RequestBody reqFile = RequestBody.create( tumb,MediaType.parse("image/*"));
-        MultipartBody.Part body = MultipartBody.Part.createFormData("thumb", tumb.getName(), reqFile);
-
-        RequestBody fName = RequestBody.create( ,MediaType.parse("multipart/form-data"));
-        RequestBody lName = RequestBody.create( "kumar",MediaType.parse("multipart/form-data"));
-        RequestBody email = RequestBody.create( ,MediaType.parse("multipart/form-data"));
-        RequestBody mobile = RequestBody.create( ,MediaType.parse("multipart/form-data"));
-        RequestBody type = RequestBody.create( "1",MediaType.parse("multipart/form-data"));
-*/
-
-        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class, FingerEnrollActivity.this).registerFinger( "suresh", "kumar", "suresh@gmail.com", "8985018103", "1",tumb);
-        call.enqueue(new Callback<StatusResponse>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(@NonNull Call<StatusResponse> call, @NonNull Response<StatusResponse> response) {
-
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    StatusResponse statusResponse = response.body();
-
-                    Log.d(TAG, "onResponse: "+statusResponse.getMsg());
-
-                    if (statusResponse.getMsg().equalsIgnoreCase("success")) {
-                        Toast.makeText(FingerEnrollActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FingerEnrollActivity.this, "" + statusResponse.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-
-                } else if (response.errorBody() != null) {
-                    Toast.makeText(FingerEnrollActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<StatusResponse> call, @NonNull Throwable t) {
-                if (t instanceof NoConnectivityException) {
-                    // show No Connectivity message to user or do whatever you want.
-                    Toast.makeText(FingerEnrollActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    // Whenever you want to show toast use setValue.
-
-                }
-
-
-            }
-        });
-    }
 
 
     public boolean bitmapEquals(Bitmap bitmap1, Bitmap bitmap2) {

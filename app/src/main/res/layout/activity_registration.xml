@@ -31,7 +31,10 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/enter_first_name" />
+                android:hint="@string/enter_first_name"
+                android:id="@+id/etFirstName"
+                android:imeOptions="actionNext"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -43,7 +46,10 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/enter_last_name" />
+                android:hint="@string/enter_last_name"
+                android:id="@+id/etLastName"
+                android:imeOptions="actionNext"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -57,7 +63,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="@string/enter_email_id" />
+                android:hint="@string/enter_email_id"
+                android:id="@+id/etEmailId"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -72,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:maxLength="10"
+                android:id="@+id/etMobile"
                 android:hint="@string/enter_mobile_number" />
         </com.google.android.material.textfield.TextInputLayout>
 
