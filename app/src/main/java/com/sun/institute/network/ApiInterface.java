@@ -73,9 +73,9 @@ public interface ApiInterface {
 
     @POST("app.php?act=facultLogin")
     Call<FacultyList> loginFinger(
-             @Query("mobile") String thumb
-            // @Query("carrent_time") String carrent_time,
-            // @Query("carrent_time1") String carrent_time1
+             @Query("mobile") String thumb,
+             @Query("carrent_time") String carrent_time,
+             @Query("carrent_time1") String carrent_time1
 
     );
 

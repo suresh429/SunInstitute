@@ -29,7 +29,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 100;
     ActivityRegistrationBinding binding;
     private static final String TAG = "RegistrationActivity";
-    String requiredThumb, selectedRbText;
+    String requiredThumb, selectedRbText,type;
     RadioButton selectedRadioButton;
 
     @Override
@@ -52,6 +52,12 @@ public class RegistrationActivity extends AppCompatActivity {
             if (selectedRadioButtonId != -1) {
                 selectedRadioButton = findViewById(selectedRadioButtonId);
                 selectedRbText = selectedRadioButton.getText().toString();
+
+                if (selectedRbText.equalsIgnoreCase("Teaching")){
+                    type= "1";
+                }else {
+                    type ="0";
+                }
                 // textView.setText(selectedRbText + " is Selected");
             }
 
@@ -93,7 +99,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void registerFinger() {
 
         binding.progressCircular.setVisibility(View.VISIBLE);
-        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class, RegistrationActivity.this).registerFinger("suresh", "kumar", "suresh@gmail.com", "8985018103", "1", requiredThumb);
+        Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class, RegistrationActivity.this).registerFinger(binding.etFirstName.getText().toString(), binding.etLastName.getText().toString(), binding.etEmailId.getText().toString(), binding.etMobile.getText().toString(), type, requiredThumb);
         call.enqueue(new Callback<StatusResponse>() {
             @SuppressLint("SetTextI18n")
             @Override
