@@ -56,7 +56,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 if (selectedRbText.equalsIgnoreCase("Teaching")){
                     type= "1";
                 }else {
-                    type ="0";
+                    type ="2";
                 }
                 // textView.setText(selectedRbText + " is Selected");
             }
