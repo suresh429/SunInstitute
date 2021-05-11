@@ -16,6 +16,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
@@ -724,11 +725,14 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                     }
                     if (t1 == null) {
                         t1 = result.getISO_Template();
-                        Log.d(TAG, "run: "+t1);
+                        Log.d(TAG, "t1Value: "+t1);
+                        String stringT2 = Base64.encodeToString(t1,Base64.NO_WRAP);
+                        loginFinger(stringT2);
 
-                    } else {
+                    }
+                    else {
                         t2 = result.getISO_Template();
-                        Log.d(TAG, "run: "+t2);
+                        Log.d(TAG, "t2Value: "+t2);
                         String stringT2 = Base64.encodeToString(t2,Base64.NO_WRAP);
 
                         loginFinger(stringT2);
@@ -772,11 +776,14 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
 
     private void loginFinger(String stringT2){
-        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger("8465945100" );
+
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger( );
         call.enqueue(new Callback<FacultyList>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(@NonNull Call<FacultyList> call, @NonNull Response<FacultyList> response) {
+
+                Log.d(TAG, "onResponsestatus: "+response.isSuccessful());
 
                 if (response.isSuccessful()) {
                     assert response.body() != null;
@@ -784,17 +791,47 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
                     Log.d(TAG, "onResponse: "+statusResponse.getMsg());
 
+                    String data =statusResponse.getInfo();
 
-                    boolean matchval = FunctionBase64(statusResponse.getInfo().getThumb(), stringT2);
-                    if (matchval) {
-                        Toast toast = Toast.makeText(getBaseContext(), "Finger matched", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+
+                    Log.d(TAG, "onResponsedata: "+data);
+
+                    if (FM220SDK.MatchFM220String(statusResponse.getInfo(),stringT2)){
+                        Log.d(TAG, "Fingermatched: "+"Finger matched");
+                        textMessage.setText("Finger matched");
+                        textMessage.setTextColor(Color.GREEN);
                     } else {
-                        Toast toast = Toast.makeText(getBaseContext(), "Finger not matched", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                        textMessage.setText("Finger not matched");
+                        textMessage.setTextColor(Color.RED);
+                        Log.d(TAG, "Fingernotmatched: "+"Finger not matched");
+
                     }
+
+
+
+                  /*  byte [] primary = Base64.decode(stringT2,Base64.URL_SAFE);
+                    Log.d(TAG, "primary: "+primary);
+                    byte [] secondry = Base64.decode(String.valueOf(statusResponse.getInfo()),Base64.URL_SAFE);
+                    Log.d(TAG, "secondry: "+secondry);*/
+
+                  /*  if(primary!=null && secondry!=null)
+                    {
+                        if (FM220SDK.MatchFM220(primary, secondry)) {
+
+                            Log.d(TAG, "Fingermatched: "+"Finger matched");
+                            textMessage.setText("Finger matched");
+                        } else {
+                            textMessage.setText("Finger not matched");
+                            Log.d(TAG, "Fingernotmatched: "+"Finger not matched");
+
+                        }
+                    }
+                    else
+                    {
+
+                    }*/
+
+
 
 
 

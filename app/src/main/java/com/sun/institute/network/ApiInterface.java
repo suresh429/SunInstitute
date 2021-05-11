@@ -64,9 +64,9 @@ public interface ApiInterface {
 
 
 
-    @POST("app.php?act=facultLogin")
+    @POST("app.php?act=facultLogin&mobile=8465945100")
     Call<FacultyList> loginFinger(
-            @Query("mobile") String thumb
+           // @Query("mobile") String thumb
     );
 
 
