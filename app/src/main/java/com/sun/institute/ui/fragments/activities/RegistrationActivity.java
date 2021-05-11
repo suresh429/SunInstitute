@@ -92,6 +92,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void registerFinger() {
 
+        binding.progressCircular.setVisibility(View.VISIBLE);
         Call<StatusResponse> call = RetrofitService.createService(ApiInterface.class, RegistrationActivity.this).registerFinger("suresh", "kumar", "suresh@gmail.com", "8985018103", "1", requiredThumb);
         call.enqueue(new Callback<StatusResponse>() {
             @SuppressLint("SetTextI18n")
@@ -99,6 +100,8 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<StatusResponse> call, @NonNull Response<StatusResponse> response) {
 
                 if (response.isSuccessful()) {
+                    binding.progressCircular.setVisibility(View.GONE);
+
                     assert response.body() != null;
                     StatusResponse statusResponse = response.body();
 
@@ -112,6 +115,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 } else if (response.errorBody() != null) {
                     Toast.makeText(RegistrationActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    binding.progressCircular.setVisibility(View.GONE);
 
                 }
             }
@@ -125,6 +129,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 }
 
+                binding.progressCircular.setVisibility(View.GONE);
 
             }
         });
