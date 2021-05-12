@@ -822,7 +822,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                     assert response.body() != null;
                     FacultyList statusResponse = response.body();
 
-                    if (statusResponse.getMsg().equalsIgnoreCase("true")) {
+                    if (statusResponse.getStatus().equalsIgnoreCase("true")) {
 
                         if (FM220SDK.MatchFM220String(statusResponse.getInfo(), stringT2)) {
                             Log.d(TAG, "Fingermatched: " + "Finger matched");
