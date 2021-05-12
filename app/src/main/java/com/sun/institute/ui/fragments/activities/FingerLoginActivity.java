@@ -798,10 +798,10 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                     //loginFinger(BitMapToString(result.getScanImage()));
                     imageView.setImageBitmap(result.getScanImage());
                     Log.d(TAG, "run: " + result.getFingermatchScore());
-                    textMessage.setText("Finger matched\n" + "Success NFIQ:" + result.getNFIQ() + "Score:- " + result.getFingermatchScore());
+                  //  textMessage.setText("Finger matched\n" + "Success NFIQ:" + result.getNFIQ() + "Score:- " + result.getFingermatchScore());
                 } else {
                     imageView.setImageBitmap(null);
-                    textMessage.setText("Finger not matched\n" + result.getError());
+                   // textMessage.setText("Finger not matched\n" + result.getError());
                 }
                 imageView.invalidate();
                 textMessage.invalidate();
