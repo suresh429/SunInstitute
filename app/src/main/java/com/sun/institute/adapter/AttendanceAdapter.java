@@ -23,14 +23,16 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
     List<StudentsResponse.InfoBean> modelList;
     Context mContext;
     List<SubjectResponse.InfoBean> subject;
-    String subjectId;
+    String subjectId,subjectName;
 
     private AdapterCallback mListener;
 
-    public AttendanceAdapter(List<StudentsResponse.InfoBean> modelList, Context mContext, List<SubjectResponse.InfoBean> subject, AdapterCallback mListener) {
+    public AttendanceAdapter(List<StudentsResponse.InfoBean> modelList, Context mContext, List<SubjectResponse.InfoBean> subject, String subjectId, String subjectName, AdapterCallback mListener) {
         this.modelList = modelList;
         this.mContext = mContext;
         this.subject = subject;
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
         this.mListener = mListener;
 
     }
@@ -48,8 +50,9 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         StudentsResponse.InfoBean student = modelList.get(position);
         holder.rowItemBinding.txtName.setText(modelList.get(position).getStuName());
         holder.rowItemBinding.txtFatherName.setText("S/O " + modelList.get(position).getFatherName());
+        holder.rowItemBinding.txtSubjectName.setText( subjectName);
 
-        String[] items = new String[subject.size()];
+       /* String[] items = new String[subject.size()];
         //Traversing through the whole list to get all the names
         for (int i = 0; i < subject.size(); i++) {
             //Storing names to string array
@@ -71,7 +74,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
         holder.rowItemBinding.btnPresent.setOnClickListener(v -> {
             mListener.presentClick(student, subjectId);

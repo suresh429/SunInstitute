@@ -830,7 +830,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                             textMessage.setTextColor(Color.GREEN);
 
                             // Faculty Attandance
-                            facultyAttendance(statusResponse.getTimetable(),statusResponse.getFacultyId());
+                            facultyAttendance(statusResponse.getTimetable(),statusResponse.getFacultyId(),statusResponse.getSubjectId(),statusResponse.getSubjectName());
 
                         } else {
                             textMessage.setText("Finger not matched");
@@ -841,7 +841,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
                         }
                     } else {
-                        Toast.makeText(FingerLoginActivity.this, "Invalid Mobile No", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FingerLoginActivity.this, "Please Check Your Mobile no / Time Slots ! ", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -892,7 +892,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
         });
     }
 
-    private void facultyAttendance(String timeTableId,String userId){
+    private void facultyAttendance(String timeTableId, String userId, String subjectId, String subjectName){
         Call<ResponseBody> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).facultyAtt(userId);
         call.enqueue(new Callback<ResponseBody>() {
             @SuppressLint("SetTextI18n")
@@ -903,7 +903,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                     assert response.body() != null;
 
 
-                    userSessionManager.createLogin( userId,timeTableId);
+                    userSessionManager.createLogin( userId,timeTableId,subjectId,subjectName);
                     Intent intent = new Intent(FingerLoginActivity.this,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

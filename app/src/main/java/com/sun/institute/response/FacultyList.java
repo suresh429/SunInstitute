@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class FacultyList {
 
+
     @SerializedName("msg")
     private String msg;
     @SerializedName("status")
@@ -14,6 +15,10 @@ public class FacultyList {
     private String facultyId;
     @SerializedName("timetable")
     private String timetable;
+    @SerializedName("subject_id")
+    private String subjectId;
+    @SerializedName("subject_name")
+    private String subjectName;
 
     public String getMsg() {
         return msg;
@@ -53,5 +58,21 @@ public class FacultyList {
 
     public void setTimetable(String timetable) {
         this.timetable = timetable;
+    }
+
+    public String getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 }

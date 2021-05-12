@@ -25,6 +25,7 @@ import com.sun.institute.response.SectionResponse;
 import com.sun.institute.response.StatusResponse;
 import com.sun.institute.response.StudentsResponse;
 import com.sun.institute.response.SubjectResponse;
+import com.sun.institute.sessions.UserSessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +44,16 @@ public class DashboardFragment extends Fragment {
     AttendanceAdapter adapter;
     List<SubjectResponse.InfoBean> subject;
 
+    String subjectId,subjectName;
 
+UserSessionManager userSessionManager;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(getLayoutInflater());
+
+        userSessionManager = new UserSessionManager(requireContext());
+         subjectId = userSessionManager.getUserDetails().get("subject_id");
+         subjectName = userSessionManager.getUserDetails().get("subject_name");
 
         getSubject();
         getDepartment();
@@ -239,7 +246,7 @@ public class DashboardFragment extends Fragment {
                     List<StudentsResponse.InfoBean> student = response.body().getInfo();
 
                     binding.recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-                    adapter = new AttendanceAdapter(student, requireContext(), subject, new AttendanceAdapter.AdapterCallback() {
+                    adapter = new AttendanceAdapter(student, requireContext(), subject,subjectId,subjectName, new AttendanceAdapter.AdapterCallback() {
                         @Override
                         public void presentClick(StudentsResponse.InfoBean studentsResponse, String subjectId) {
                             getAttendanceStatus(studentsResponse.getStuId(), subjectId, studentsResponse.getDeptId(), studentsResponse.getSecId(), "1", studentsResponse.getStuName());

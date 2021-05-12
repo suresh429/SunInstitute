@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 
 public class UserSessionManager {
@@ -25,7 +27,11 @@ public class UserSessionManager {
     // All Shared Preferences Keys
     public static final String KEY_ID = "id";
     public static final String KEY_TIME_TABLE_ID = "time_table_id";
+    public static final String KEY_SUBJECT_ID = "subject_id";
+    public static final String KEY_SUBJECT = "subject_name";
     public static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+
+
 
     @SuppressLint("CommitPrefEdits")
     public UserSessionManager(Context context) {
@@ -35,9 +41,11 @@ public class UserSessionManager {
     }
 
 
-    public  void createLogin(String id,String time_table_id) {
+    public  void createLogin(String id,String time_table_id,String subjectId,String subject) {
         editor.putString(KEY_ID, id);
         editor.putString(KEY_TIME_TABLE_ID, time_table_id);
+        editor.putString(KEY_SUBJECT_ID, subjectId);
+        editor.putString(KEY_SUBJECT, subject);
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
         editor.commit();
     }
@@ -46,6 +54,8 @@ public class UserSessionManager {
         HashMap<String, String> profile = new HashMap<>();
         profile.put("id", pref.getString(KEY_ID, null));
         profile.put("time_table_id", pref.getString(KEY_TIME_TABLE_ID, null));
+        profile.put("subject_id", pref.getString(KEY_SUBJECT_ID, null));
+        profile.put("subject_name", pref.getString(KEY_SUBJECT, null));
         return profile;
     }
 
