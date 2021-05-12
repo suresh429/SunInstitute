@@ -54,7 +54,21 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
+        @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        currentTime = dateFormat.format(new Date()).toString();
 
+        Date d = null;
+        try {
+            d = dateFormat.parse(currentTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.add(Calendar.MINUTE, 10);
+        newTime = dateFormat.format(cal.getTime());
+
+        Log.d(TAG, "onCreate: "+currentTime+"--------"+newTime);
 
         binding.btnRegister.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
@@ -91,4 +105,49 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+/*
+    private void loginFinger(String stringT2){
+
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, LoginActivity.this).loginFinger( "8465945100",currentTime,newTime);
+        call.enqueue(new Callback<FacultyList>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<FacultyList> call, @NonNull Response<FacultyList> response) {
+
+                Log.d(TAG, "onResponsestatus: "+response.isSuccessful());
+
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    FacultyList statusResponse = response.body();
+
+                    if (statusResponse.getStatus().equalsIgnoreCase("true")){
+
+                        String data =statusResponse.getInfo();
+
+                    }else {
+                        Toast.makeText(LoginActivity.this, "Invalid Mobile No", Toast.LENGTH_SHORT).show();
+
+                    }
+
+
+                } else if (response.errorBody() != null) {
+                    Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<FacultyList> call, @NonNull Throwable t) {
+                if (t instanceof NoConnectivityException) {
+                    // show No Connectivity message to user or do whatever you want.
+                    Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Whenever you want to show toast use setValue.
+
+                }
+
+                Log.d(TAG, "onFailure: "+t.getMessage());
+            }
+        });
+    }
+*/
 }
