@@ -215,6 +215,9 @@ public class HomeFragment extends Fragment {
                         Intent intent = new Intent(requireActivity(),LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+
+                        Toast.makeText(getContext(), "Session Expired !", Toast.LENGTH_LONG).show();
+
                         userSessionManager.clearSession();
                     },2000);
 
