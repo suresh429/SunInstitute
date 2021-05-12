@@ -757,7 +757,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                     if (result.isEnroll()) {  // if isEnroll return true then result.getISO_Template() return enrolled finger data .
                         textMessage.setText("Finger Enroll Success");
                     } else {
-                        textMessage.setText("Success NFIQ:" + Integer.toString(result.getNFIQ()) + "  SrNo:" + result.getSerialNo());
+                        textMessage.setText("");
                     }
                     if (t1 == null) {
                         t1 = result.getISO_Template();
