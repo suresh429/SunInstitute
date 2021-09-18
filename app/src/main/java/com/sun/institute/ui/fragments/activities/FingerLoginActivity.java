@@ -52,6 +52,7 @@ import com.sun.institute.network.NoConnectivityException;
 import com.sun.institute.network.RetrofitService;
 import com.sun.institute.response.FacultyList;
 import com.sun.institute.response.StatusResponse;
+import com.sun.institute.response.ThumbDataResponse;
 import com.sun.institute.sessions.UserSessionManager;
 
 import java.io.ByteArrayOutputStream;
@@ -765,14 +766,25 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                         t1 = result.getISO_Template();
                         Log.d(TAG, "t1Value: " + t1);
                         String stringT2 = Base64.encodeToString(t1, Base64.NO_WRAP);
-                        loginFinger(stringT2);
+
+                        if (status.equalsIgnoreCase("Login")){
+                            loginFinger(stringT2);
+                        }else {
+                            allLoginFinger(stringT2);
+                        }
+
 
                     } else {
                         t2 = result.getISO_Template();
                         Log.d(TAG, "t2Value: " + t2);
                         String stringT2 = Base64.encodeToString(t2, Base64.NO_WRAP);
 
-                        loginFinger(stringT2);
+                        if (status.equalsIgnoreCase("Login")){
+                            loginFinger(stringT2);
+                        }else {
+                            allLoginFinger(stringT2);
+                        }
+
                     }
 //                    Bitmap mb = result.getScanImage();
 //                    System.out.print((mb));
@@ -890,6 +902,65 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
             }
         });
     }
+
+    private void allLoginFinger(String stringT2) {
+
+        Call<ThumbDataResponse> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).allLogins();
+        call.enqueue(new Callback<ThumbDataResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<ThumbDataResponse> call, @NonNull Response<ThumbDataResponse> response) {
+
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    ThumbDataResponse statusResponse = response.body();
+
+                    if (statusResponse.getMsg()==1) {
+
+                        for (ThumbDataResponse.InfoBean infoBean : statusResponse.getInfo()) {
+
+                            if (FM220SDK.MatchFM220String(infoBean.getThumb(), stringT2)) {
+                                Log.d(TAG, "Fingermatched: " + "Finger matched");
+                                textMessage.setText("Finger matched");
+                                textMessage.setTextColor(Color.GREEN);
+
+
+                            } else {
+                                textMessage.setText("Finger not matched");
+                                textMessage.setTextColor(Color.RED);
+                                Log.d(TAG, "Fingernotmatched: " + "Finger not matched");
+
+                                Toast.makeText(FingerLoginActivity.this, "Finger not matched", Toast.LENGTH_LONG).show();
+
+                            }
+                        }
+                    } else {
+                        Toast.makeText(FingerLoginActivity.this, "Please Check Your Mobile no / Time Slots ! ", Toast.LENGTH_SHORT).show();
+
+                    }
+
+
+
+                } else if (response.errorBody() != null) {
+                    Toast.makeText(FingerLoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ThumbDataResponse> call, @NonNull Throwable t) {
+                if (t instanceof NoConnectivityException) {
+                    // show No Connectivity message to user or do whatever you want.
+                    Toast.makeText(FingerLoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Whenever you want to show toast use setValue.
+
+                }
+
+
+            }
+        });
+    }
+
 
     private void facultyAttendance(String timeTableId, String userId, String subjectId, String subjectName){
         Call<ResponseBody> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).facultyAtt(userId);

@@ -8,6 +8,7 @@ import com.sun.institute.response.SectionResponse;
 import com.sun.institute.response.StatusResponse;
 import com.sun.institute.response.StudentsResponse;
 import com.sun.institute.response.SubjectResponse;
+import com.sun.institute.response.ThumbDataResponse;
 import com.sun.institute.response.TimeTableResponse;
 
 import java.util.Map;
@@ -112,7 +113,7 @@ public interface ApiInterface {
 
 
     @GET("app.php?act=ThumbData")
-    Call<FacultyList> allLogin(
+    Call<ThumbDataResponse> allLogins(
     );
 
 
