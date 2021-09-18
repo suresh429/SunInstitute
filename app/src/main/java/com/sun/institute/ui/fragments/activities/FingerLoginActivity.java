@@ -924,6 +924,8 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                                 textMessage.setText("Finger matched");
                                 textMessage.setTextColor(Color.GREEN);
 
+                                payslip(infoBean.getId());
+
                                 break;
 
                             } else {
@@ -950,6 +952,42 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
             @Override
             public void onFailure(@NonNull Call<ThumbDataResponse> call, @NonNull Throwable t) {
+                if (t instanceof NoConnectivityException) {
+                    // show No Connectivity message to user or do whatever you want.
+                    Toast.makeText(FingerLoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Whenever you want to show toast use setValue.
+
+                }
+
+
+            }
+        });
+    }
+
+
+    private void payslip(String id) {
+
+        Call<ResponseBody> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).paySlip(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    ResponseBody statusResponse = response.body();
+
+                    Toast.makeText(FingerLoginActivity.this, "Your Attendance Added Successfully", Toast.LENGTH_SHORT).show();
+
+
+                } else if (response.errorBody() != null) {
+                    Toast.makeText(FingerLoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     // show No Connectivity message to user or do whatever you want.
                     Toast.makeText(FingerLoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();

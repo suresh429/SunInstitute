@@ -116,6 +116,11 @@ public interface ApiInterface {
     Call<ThumbDataResponse> allLogins(
     );
 
+    @GET("app.php?act=payslip")
+    Call<ResponseBody> paySlip(
+            @Query("id") String id
+    );
+
 
 
 
