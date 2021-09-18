@@ -924,6 +924,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                                 textMessage.setText("Finger matched");
                                 textMessage.setTextColor(Color.GREEN);
 
+                                break;
 
                             } else {
                                 textMessage.setText("Finger not matched");
