@@ -96,7 +96,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
     private static final String ACTION_USB_PERMISSION = "com.ACPL.FM220_Telecom.USB_PERMISSION";
     private static boolean isLocalConn = false;
 
-    String mobileNo;
+    String mobileNo,status;
 
     @SuppressLint("SetTextI18n")
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
@@ -271,6 +271,8 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
         if (getIntent() != null) {
             mobileNo = getIntent().getStringExtra("MOBILE");
+            status = getIntent().getStringExtra("STATUS");
+
         }
 
 
@@ -789,23 +791,20 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
     @SuppressLint("SetTextI18n")
     @Override
     public void ScanMatchFM220(final fm220_Capture_Result result) {
-        FingerLoginActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (FM220SDK.FM220Initialized()) EnableCapture();
-                if (result.getResult()) {
-                    //saveFinger(BitMapToString(result.getScanImage()));
-                    //loginFinger(BitMapToString(result.getScanImage()));
-                    imageView.setImageBitmap(result.getScanImage());
-                    Log.d(TAG, "run: " + result.getFingermatchScore());
-                  //  textMessage.setText("Finger matched\n" + "Success NFIQ:" + result.getNFIQ() + "Score:- " + result.getFingermatchScore());
-                } else {
-                    imageView.setImageBitmap(null);
-                   // textMessage.setText("Finger not matched\n" + result.getError());
-                }
-                imageView.invalidate();
-                textMessage.invalidate();
+        FingerLoginActivity.this.runOnUiThread(() -> {
+            if (FM220SDK.FM220Initialized()) EnableCapture();
+            if (result.getResult()) {
+                //saveFinger(BitMapToString(result.getScanImage()));
+                //loginFinger(BitMapToString(result.getScanImage()));
+                imageView.setImageBitmap(result.getScanImage());
+                Log.d(TAG, "run: " + result.getFingermatchScore());
+              //  textMessage.setText("Finger matched\n" + "Success NFIQ:" + result.getNFIQ() + "Score:- " + result.getFingermatchScore());
+            } else {
+                imageView.setImageBitmap(null);
+               // textMessage.setText("Finger not matched\n" + result.getError());
             }
+            imageView.invalidate();
+            textMessage.invalidate();
         });
     }
 

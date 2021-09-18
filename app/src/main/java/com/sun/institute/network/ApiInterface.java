@@ -59,6 +59,8 @@ public interface ApiInterface {
                                        @Field("last_name") String last_name,
                                        @Field("email") String email,
                                        @Field("mobile") String mobile,
+                                       @Field("salary") String salary,
+                                       @Field("join_date") String joinDate,
                                        @Field("type") String type,
                                        @Field("thumb") String thumb
     );

@@ -40,4 +40,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="time_table">Time Table</string>
+    <string name="attendance">Attendance</string>
+    <string name="enter_salary">Enter Salary</string>
+    <string name="enter_date_of_join">Enter Date Of Join</string>
 </resources>

@@ -10,11 +10,12 @@
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:contentDescription="@string/todo"
         android:src="@drawable/logo" />
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -33,6 +34,7 @@
             android:inputType="phone"
             android:id="@+id/etMobile"
             android:maxLength="10"
+            android:imeOptions="actionDone"
             android:hint="@string/enter_mobile_number" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,7 +54,9 @@
             android:id="@+id/btnLogin"
             android:text="@string/login"
             android:layout_weight="1"
-            android:layout_margin="5dp"/>
+            android:layout_margin="3dp"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
@@ -60,7 +64,19 @@
             android:id="@+id/btnRegister"
             android:text="@string/registration"
             android:layout_weight="1"
-            android:layout_margin="5dp"/>
+            android:layout_margin="3dp"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAttendance"
+            android:text="@string/attendance"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
 
     </LinearLayout>
 

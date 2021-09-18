@@ -65,7 +65,7 @@
         <activity android:name=".ui.fragments.activities.RegistrationActivity" />
         <activity
             android:name=".ui.fragments.activities.LoginActivity"
-            android:theme="@style/noActionBar" />
+             />
         <activity
             android:name=".ui.fragments.activities.SplashActivity"
             android:theme="@style/noActionBar">

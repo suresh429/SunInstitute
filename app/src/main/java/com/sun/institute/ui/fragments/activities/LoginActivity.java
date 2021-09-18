@@ -1,6 +1,7 @@
 package com.sun.institute.ui.fragments.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
     private static final String TAG = "LoginActivity";
     ActivityLoginBinding binding;
     UserSessionManager userSessionManager;
@@ -87,12 +88,28 @@ public class LoginActivity extends AppCompatActivity {
                 binding.txtInputLayout.setErrorEnabled(false);
                 Intent intent = new Intent(LoginActivity.this, FingerLoginActivity.class);
                 intent.putExtra("MOBILE",mobile);
+                intent.putExtra("STATUS","Login");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
 
            // loginFinger("");
 
+        });
+
+        binding.btnAttendance.setOnClickListener(v -> {
+            String mobile = Objects.requireNonNull(binding.etMobile.getText()).toString().trim();
+            if (mobile.isEmpty() || !isValidMobile(mobile) || binding.etMobile.getText().toString().length() < 10) {
+                binding.txtInputLayout.setError("Enter Valid Mobile No.");
+
+            } else {
+                binding.txtInputLayout.setErrorEnabled(false);
+                Intent intent = new Intent(LoginActivity.this, FingerLoginActivity.class);
+                intent.putExtra("MOBILE",mobile);
+                intent.putExtra("STATUS","Attendance");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         });
 
 
