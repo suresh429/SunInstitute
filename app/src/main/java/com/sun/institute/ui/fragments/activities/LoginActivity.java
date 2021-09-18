@@ -98,7 +98,14 @@ public class LoginActivity extends Activity {
         });
 
         binding.btnAttendance.setOnClickListener(v -> {
-            String mobile = Objects.requireNonNull(binding.etMobile.getText()).toString().trim();
+
+            Intent intent = new Intent(LoginActivity.this, FingerLoginActivity.class);
+            intent.putExtra("MOBILE","");
+            intent.putExtra("STATUS","Attendance");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+           /* String mobile = Objects.requireNonNull(binding.etMobile.getText()).toString().trim();
             if (mobile.isEmpty() || !isValidMobile(mobile) || binding.etMobile.getText().toString().length() < 10) {
                 binding.txtInputLayout.setError("Enter Valid Mobile No.");
 
@@ -109,7 +116,7 @@ public class LoginActivity extends Activity {
                 intent.putExtra("STATUS","Attendance");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-            }
+            }*/
         });
 
 

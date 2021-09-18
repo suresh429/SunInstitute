@@ -931,7 +931,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                                 textMessage.setTextColor(Color.RED);
                                 Log.d(TAG, "Fingernotmatched: " + "Finger not matched");
 
-                                Toast.makeText(FingerLoginActivity.this, "Finger not matched", Toast.LENGTH_LONG).show();
+                              //  Toast.makeText(FingerLoginActivity.this, "Finger not matched", Toast.LENGTH_LONG).show();
 
                             }
                         }
