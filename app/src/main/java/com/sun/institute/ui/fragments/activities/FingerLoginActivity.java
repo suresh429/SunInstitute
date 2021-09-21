@@ -323,9 +323,16 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                 } else {
                     Intent intent = this.getIntent();
                     if (intent != null) {
-                        if (intent.getAction().equals("android.hardware.usb.action.USB_DEVICE_ATTACHED")) {
+                        /*if (intent.getAction().equals("android.hardware.usb.action.USB_DEVICE_ATTACHED")) {
                             finishAffinity();
+                        }*/
+
+                        if ("android.hardware.usb.action.USB_DEVICE_ATTACHED".equals(intent.getAction())){
+                            finishAffinity();
+                        }else {
+                            Log.d(TAG, "onCreate: "+"error");
                         }
+                        //
                     }
                     fm220_Init_Result res = FM220SDK.InitScannerFM220(manager, device, Telecom_Device_Key);
                     if (res.getResult()) {
