@@ -83,8 +83,8 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
     private TextView textMessage;
     private ImageView imageView;
     private ProgressBar progress_circular;
-    private String currentTime,newTime;
-    UserSessionManager userSessionManager ;
+    private String currentTime, newTime;
+    UserSessionManager userSessionManager;
     //  private Button btn_Release, btn_Clam, btn_RDCapture;
 //  region Sen
     private static final String Telecom_Device_Key = "";
@@ -97,7 +97,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
     private static final String ACTION_USB_PERMISSION = "com.ACPL.FM220_Telecom.USB_PERMISSION";
     private static boolean isLocalConn = false;
 
-    String mobileNo,status;
+    String mobileNo, status;
 
     @SuppressLint("SetTextI18n")
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
@@ -327,10 +327,10 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                             finishAffinity();
                         }*/
 
-                        if ("android.hardware.usb.action.USB_DEVICE_ATTACHED".equals(intent.getAction())){
+                        if ("android.hardware.usb.action.USB_DEVICE_ATTACHED".equals(intent.getAction())) {
                             finishAffinity();
-                        }else {
-                            Log.d(TAG, "onCreate: "+"error");
+                        } else {
+                            Log.d(TAG, "onCreate: " + "error");
                         }
                         //
                     }
@@ -774,9 +774,9 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                         Log.d(TAG, "t1Value: " + t1);
                         String stringT2 = Base64.encodeToString(t1, Base64.NO_WRAP);
 
-                        if (status.equalsIgnoreCase("Login")){
+                        if (status.equalsIgnoreCase("Login")) {
                             loginFinger(stringT2);
-                        }else {
+                        } else {
                             allLoginFinger(stringT2);
                         }
 
@@ -786,9 +786,9 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                         Log.d(TAG, "t2Value: " + t2);
                         String stringT2 = Base64.encodeToString(t2, Base64.NO_WRAP);
 
-                        if (status.equalsIgnoreCase("Login")){
+                        if (status.equalsIgnoreCase("Login")) {
                             loginFinger(stringT2);
-                        }else {
+                        } else {
                             allLoginFinger(stringT2);
                         }
 
@@ -817,10 +817,10 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                 //loginFinger(BitMapToString(result.getScanImage()));
                 imageView.setImageBitmap(result.getScanImage());
                 Log.d(TAG, "run: " + result.getFingermatchScore());
-              //  textMessage.setText("Finger matched\n" + "Success NFIQ:" + result.getNFIQ() + "Score:- " + result.getFingermatchScore());
+                //  textMessage.setText("Finger matched\n" + "Success NFIQ:" + result.getNFIQ() + "Score:- " + result.getFingermatchScore());
             } else {
                 imageView.setImageBitmap(null);
-               // textMessage.setText("Finger not matched\n" + result.getError());
+                // textMessage.setText("Finger not matched\n" + result.getError());
             }
             imageView.invalidate();
             textMessage.invalidate();
@@ -830,7 +830,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
     private void loginFinger(String stringT2) {
 
-        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger(mobileNo,currentTime,newTime);
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger(mobileNo);
         call.enqueue(new Callback<FacultyList>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -848,7 +848,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                             textMessage.setTextColor(Color.GREEN);
 
                             // Faculty Attandance
-                            facultyAttendance(statusResponse.getTimetable(),statusResponse.getFacultyId(),statusResponse.getSubjectId(),statusResponse.getSubjectName());
+                            facultyAttendance(statusResponse.getTimetable(), statusResponse.getFacultyId(), statusResponse.getSubjectId(), statusResponse.getSubjectName());
 
                         } else {
                             textMessage.setText("Finger not matched");
@@ -922,7 +922,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                     assert response.body() != null;
                     ThumbDataResponse statusResponse = response.body();
 
-                    if (statusResponse.getMsg()==1) {
+                    if (statusResponse.getMsg() == 1) {
 
                         for (ThumbDataResponse.InfoBean infoBean : statusResponse.getInfo()) {
 
@@ -940,7 +940,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                                 textMessage.setTextColor(Color.RED);
                                 Log.d(TAG, "Fingernotmatched: " + "Finger not matched");
 
-                              //  Toast.makeText(FingerLoginActivity.this, "Finger not matched", Toast.LENGTH_LONG).show();
+                                //  Toast.makeText(FingerLoginActivity.this, "Finger not matched", Toast.LENGTH_LONG).show();
 
                             }
                         }
@@ -948,7 +948,6 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                         Toast.makeText(FingerLoginActivity.this, "Please Check Your Mobile no / Time Slots ! ", Toast.LENGTH_SHORT).show();
 
                     }
-
 
 
                 } else if (response.errorBody() != null) {
@@ -1008,7 +1007,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
     }
 
 
-    private void facultyAttendance(String timeTableId, String userId, String subjectId, String subjectName){
+    private void facultyAttendance(String timeTableId, String userId, String subjectId, String subjectName) {
         Call<ResponseBody> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).facultyAtt(userId);
         call.enqueue(new Callback<ResponseBody>() {
             @SuppressLint("SetTextI18n")
@@ -1019,8 +1018,8 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
                     assert response.body() != null;
 
 
-                    userSessionManager.createLogin( userId,timeTableId,subjectId,subjectName);
-                    Intent intent = new Intent(FingerLoginActivity.this,MainActivity.class);
+                    userSessionManager.createLogin(userId, timeTableId, subjectId, subjectName);
+                    Intent intent = new Intent(FingerLoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
