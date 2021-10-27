@@ -48,7 +48,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         StudentsResponse.InfoBean student = modelList.get(position);
-        holder.rowItemBinding.txtName.setText(modelList.get(position).getStuName());
+        holder.rowItemBinding.txtName.setText(modelList.get(position).getStuLname()+" "+modelList.get(position).getStuName());
         holder.rowItemBinding.txtFatherName.setText("S/O " + modelList.get(position).getFatherName());
         holder.rowItemBinding.txtSubjectName.setText( subjectName);
 

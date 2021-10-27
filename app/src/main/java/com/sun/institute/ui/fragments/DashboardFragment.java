@@ -114,12 +114,19 @@ UserSessionManager userSessionManager;
                 sectionNameList.clear();
                 sectionIdList.clear();
 
-                if (position != 0) {
+               /* if (position != 0) {
                     getSection(departmentIdList.get(position));
                     binding.recyclerView.setVisibility(View.GONE);
                 } else {
                     binding.recyclerView.setVisibility(View.GONE);
                    
+                }*/
+
+                if (position != 0) {
+                    getAllStudentsListData(departmentIdList.get(position));
+                    binding.recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    binding.recyclerView.setVisibility(View.GONE);
                 }
 
             }
@@ -245,20 +252,28 @@ UserSessionManager userSessionManager;
                     assert response.body() != null;
                     List<StudentsResponse.InfoBean> student = response.body().getInfo();
 
-                    binding.recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-                    adapter = new AttendanceAdapter(student, requireContext(), subject,subjectId,subjectName, new AttendanceAdapter.AdapterCallback() {
-                        @Override
-                        public void presentClick(StudentsResponse.InfoBean studentsResponse, String subjectId) {
-                            getAttendanceStatus(studentsResponse.getStuId(), subjectId, studentsResponse.getDeptId(), studentsResponse.getSecId(), "1", studentsResponse.getStuName());
-                        }
+                    if (student != null && student.size() > 0) {
+                        binding.recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+                        adapter = new AttendanceAdapter(student, requireContext(), subject, subjectId, subjectName, new AttendanceAdapter.AdapterCallback() {
+                            @Override
+                            public void presentClick(StudentsResponse.InfoBean studentsResponse, String subjectId) {
+                                getAttendanceStatus(studentsResponse.getStuId(), subjectId, studentsResponse.getDeptId(), studentsResponse.getSecId(), "1", studentsResponse.getStuName());
+                            }
 
-                        @Override
-                        public void absentClick(StudentsResponse.InfoBean studentsResponse, String subjectId) {
-                            getAttendanceStatus(studentsResponse.getStuId(), subjectId, studentsResponse.getDeptId(), studentsResponse.getSecId(), "2", studentsResponse.getStuName());
+                            @Override
+                            public void absentClick(StudentsResponse.InfoBean studentsResponse, String subjectId) {
+                                getAttendanceStatus(studentsResponse.getStuId(), subjectId, studentsResponse.getDeptId(), studentsResponse.getSecId(), "2", studentsResponse.getStuName());
 
-                        }
-                    });
-                    binding.recyclerView.setAdapter(adapter);
+                            }
+                        });
+                        binding.recyclerView.setAdapter(adapter);
+
+                        binding.txtError.setVisibility(View.GONE);
+                        binding.recyclerView.setVisibility(View.VISIBLE);
+                    }else {
+                        binding.txtError.setVisibility(View.VISIBLE);
+                        binding.recyclerView.setVisibility(View.GONE);
+                    }
 
                 } else if (response.errorBody() != null) {
                     binding.progressCircular.setVisibility(View.GONE);
