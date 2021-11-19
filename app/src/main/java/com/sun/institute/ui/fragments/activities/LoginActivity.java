@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import com.sun.institute.databinding.ActivityLoginBinding;
 import com.sun.institute.network.ApiInterface;
 import com.sun.institute.network.NoConnectivityException;
 import com.sun.institute.network.RetrofitService;
+import com.sun.institute.response.DepartmentResponse;
 import com.sun.institute.response.FacultyList;
 import com.sun.institute.sessions.UserSessionManager;
 
@@ -26,8 +30,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -38,8 +44,9 @@ public class LoginActivity extends Activity {
     private static final String TAG = "LoginActivity";
     ActivityLoginBinding binding;
     UserSessionManager userSessionManager;
-    String currentTime,newTime;
-
+    String currentTime, newTime, dep_id;
+    ArrayList<String> departmentNameList = new ArrayList<>();
+    ArrayList<String> departmentIdList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +55,10 @@ public class LoginActivity extends Activity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        getDepartment();
+
         // login session
-         userSessionManager= new UserSessionManager(LoginActivity.this);
+        userSessionManager = new UserSessionManager(LoginActivity.this);
         if (userSessionManager.isLoggedIn()) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -69,7 +78,7 @@ public class LoginActivity extends Activity {
         cal.add(Calendar.MINUTE, 10);
         newTime = dateFormat.format(cal.getTime());
 
-        Log.d(TAG, "onCreate: "+currentTime+"--------"+newTime);
+        Log.d(TAG, "onCreate: " + currentTime + "--------" + newTime);
 
         binding.btnRegister.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
@@ -77,31 +86,33 @@ public class LoginActivity extends Activity {
             startActivity(intent);
         });
 
-
         binding.btnLogin.setOnClickListener(v -> {
 
             String mobile = Objects.requireNonNull(binding.etMobile.getText()).toString().trim();
             if (mobile.isEmpty() || !isValidMobile(mobile) || binding.etMobile.getText().toString().length() < 10) {
                 binding.txtInputLayout.setError("Enter Valid Mobile No.");
 
-            } else {
+            } else if (dep_id == "-1"){
+                Toast.makeText(LoginActivity.this, "Please select Class", Toast.LENGTH_SHORT).show();
+            }else {
                 binding.txtInputLayout.setErrorEnabled(false);
                 Intent intent = new Intent(LoginActivity.this, FingerLoginActivity.class);
-                intent.putExtra("MOBILE",mobile);
-                intent.putExtra("STATUS","Login");
+                intent.putExtra("MOBILE", mobile);
+                intent.putExtra("dep_id", dep_id);
+                intent.putExtra("STATUS", "Login");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
 
-           // loginFinger("");
+            // loginFinger("");
 
         });
 
         binding.btnAttendance.setOnClickListener(v -> {
 
             Intent intent = new Intent(LoginActivity.this, FingerLoginActivity.class);
-            intent.putExtra("MOBILE","");
-            intent.putExtra("STATUS","Attendance");
+            intent.putExtra("MOBILE", "");
+            intent.putExtra("STATUS", "Attendance");
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
@@ -123,11 +134,78 @@ public class LoginActivity extends Activity {
     }
 
 
-
     private boolean isValidMobile(String phone) {
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }
 
+    public void getDepartment() {
+        binding.progressCircular.setVisibility(View.VISIBLE);
+        Call<DepartmentResponse> call = RetrofitService.createService(ApiInterface.class, this).getDepartment("class");
+        call.enqueue(new Callback<DepartmentResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<DepartmentResponse> call, @NonNull Response<DepartmentResponse> response) {
+                binding.progressCircular.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    List<DepartmentResponse.InfoBean> department = response.body().getInfo();
+                    showDepartmentinSpinner(department);
+
+                } else if (response.errorBody() != null) {
+                    Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<DepartmentResponse> call, @NonNull Throwable t) {
+                if (t instanceof NoConnectivityException) {
+                    // show No Connectivity message to user or do whatever you want.
+                    Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Whenever you want to show toast use setValue.
+
+                }
+                binding.progressCircular.setVisibility(View.GONE);
+
+            }
+        });
+    }
+
+    private void showDepartmentinSpinner(List<DepartmentResponse.InfoBean> department) {
+        departmentNameList.add("Select Class");
+        departmentIdList.add("-1");
+        for (DepartmentResponse.InfoBean infoBean : department) {
+            departmentNameList.add(infoBean.getDeptName());
+            departmentIdList.add(infoBean.getDeptId());
+        }
+
+        ArrayAdapter<String> adapter;
+        adapter = new ArrayAdapter<String>(LoginActivity.this, android.R.layout.simple_list_item_1, departmentNameList);
+        //setting adapter to spinner
+        binding.spinner1.setAdapter(adapter);
+        //Creating an array adapter for list view
+
+        binding.spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position == 0) {
+                    dep_id = "-1";
+                } else {
+                    dep_id = departmentIdList.get(position).toString();
+                }
+
+                Log.d(TAG, "onItemSelected: "+dep_id);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
 
 /*
     private void loginFinger(String stringT2){
