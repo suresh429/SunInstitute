@@ -97,7 +97,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
     private static final String ACTION_USB_PERMISSION = "com.ACPL.FM220_Telecom.USB_PERMISSION";
     private static boolean isLocalConn = false;
 
-    String mobileNo, status,dep_id;
+    String mobileNo, status,dep_id,startTime,endTime;
 
     @SuppressLint("SetTextI18n")
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
@@ -273,7 +273,11 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
         if (getIntent() != null) {
             mobileNo = getIntent().getStringExtra("MOBILE");
             dep_id = getIntent().getStringExtra("dep_id");
+            startTime = getIntent().getStringExtra("startTime");
+            endTime = getIntent().getStringExtra("endTime");
             status = getIntent().getStringExtra("STATUS");
+
+            Log.d(TAG, "onCreate: "+startTime +"  "+endTime);
 
         }
 
@@ -831,7 +835,7 @@ public class FingerLoginActivity extends AppCompatActivity implements FM220_Scan
 
     private void loginFinger(String stringT2) {
 
-        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger(mobileNo,dep_id,currentTime,newTime);
+        Call<FacultyList> call = RetrofitService.createService(ApiInterface.class, FingerLoginActivity.this).loginFinger(mobileNo,dep_id,startTime,endTime);
         call.enqueue(new Callback<FacultyList>() {
             @SuppressLint("SetTextI18n")
             @Override

@@ -43,4 +43,6 @@
     <string name="attendance">Attendance</string>
     <string name="enter_salary">Enter Salary</string>
     <string name="enter_date_of_join">Enter Date Of Join</string>
+    <string name="end_time">End Time</string>
+    <string name="start_time">Start Time</string>
 </resources>

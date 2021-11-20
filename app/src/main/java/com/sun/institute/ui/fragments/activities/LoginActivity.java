@@ -2,6 +2,7 @@ package com.sun.institute.ui.fragments.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,11 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.sun.institute.databinding.ActivityLoginBinding;
 import com.sun.institute.network.ApiInterface;
 import com.sun.institute.network.NoConnectivityException;
@@ -26,6 +29,7 @@ import com.sun.institute.sessions.UserSessionManager;
 
 import java.sql.Time;
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -47,6 +51,10 @@ public class LoginActivity extends Activity {
     String currentTime, newTime, dep_id;
     ArrayList<String> departmentNameList = new ArrayList<>();
     ArrayList<String> departmentIdList = new ArrayList<>();
+
+    int mHour;
+    int mMin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,16 +97,26 @@ public class LoginActivity extends Activity {
         binding.btnLogin.setOnClickListener(v -> {
 
             String mobile = Objects.requireNonNull(binding.etMobile.getText()).toString().trim();
+            String startTime = Objects.requireNonNull(binding.etStartTime.getText()).toString().trim();
+            String endTime = Objects.requireNonNull(binding.etEndTime.getText()).toString().trim();
             if (mobile.isEmpty() || !isValidMobile(mobile) || binding.etMobile.getText().toString().length() < 10) {
                 binding.txtInputLayout.setError("Enter Valid Mobile No.");
 
-            } else if (dep_id == "-1"){
+            } else if (dep_id == "-1") {
                 Toast.makeText(LoginActivity.this, "Please select Class", Toast.LENGTH_SHORT).show();
-            }else {
+            } else if (startTime.isEmpty()) {
+                binding.inputStartTime.setError("Select Start Time");
+            } else if (endTime.isEmpty()) {
+                binding.inputEndTime.setError("Select End Time");
+            } else {
                 binding.txtInputLayout.setErrorEnabled(false);
+                binding.inputStartTime.setErrorEnabled(false);
+                binding.inputEndTime.setErrorEnabled(false);
                 Intent intent = new Intent(LoginActivity.this, FingerLoginActivity.class);
                 intent.putExtra("MOBILE", mobile);
                 intent.putExtra("dep_id", dep_id);
+                intent.putExtra("startTime", startTime);
+                intent.putExtra("endTime", endTime);
                 intent.putExtra("STATUS", "Login");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -130,7 +148,51 @@ public class LoginActivity extends Activity {
             }*/
         });
 
+        binding.etStartTime.setOnClickListener(v -> {
+            binding.etStartTime.setText("");
+            setTimeEdittext(binding.etStartTime);
+        });
 
+        binding.etEndTime.setOnClickListener(v -> {
+            binding.etEndTime.setText("");
+            setTimeEdittext(binding.etEndTime);
+        });
+
+
+    }
+
+    private void setTimeEdittext(TextInputEditText etTime) {
+        StringBuilder stringBuilder = new StringBuilder();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+
+            mHour = hourOfDay;
+            mMin = minute;
+
+            String am_pm;
+
+            Calendar datetime = Calendar.getInstance();
+            datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            datetime.set(Calendar.MINUTE, minute);
+
+            am_pm = getTime(mHour, mMin);
+
+            stringBuilder.append(" ");
+            stringBuilder.append(am_pm);
+            etTime.setText(stringBuilder);
+
+        }, mHour, mMin, false);
+
+        timePickerDialog.show();
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public String getTime(int hr, int min) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hr);
+        cal.set(Calendar.MINUTE, min);
+        Format formatter;
+        formatter = new SimpleDateFormat("h:mm a");
+        return formatter.format(cal.getTime());
     }
 
 
@@ -195,7 +257,7 @@ public class LoginActivity extends Activity {
                     dep_id = departmentIdList.get(position).toString();
                 }
 
-                Log.d(TAG, "onItemSelected: "+dep_id);
+                Log.d(TAG, "onItemSelected: " + dep_id);
 
             }
 
